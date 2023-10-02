@@ -14,7 +14,6 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BlogApiBoxAdapter());
   await BlogRepo.createEncryptionKey();
-  print("key" + BlogRepo.encryptionKey);
   runApp(const MyApp());
 }
 
