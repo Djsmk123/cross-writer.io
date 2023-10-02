@@ -57,6 +57,7 @@ dependencies:
   awesome_dialog: ^3.1.0
   footer: ^0.0.4
   provider: ^6.0.5
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

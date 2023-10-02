@@ -84,7 +84,7 @@ class NetworkInfoImpl extends NetworkInfo with JsonParsers {
         log(jsonEncode(body.toString()), name: "body");
         http.Response response = await http
             .post(uri, headers: header.headers, body: jsonEncode(body))
-            .timeout(const Duration(seconds: 30), onTimeout: () {
+            .timeout(const Duration(seconds: 60), onTimeout: () {
           return http.Response(jsonEncode({'Error': "Timeout"}), 500);
         });
         final data = parseJson(response.body.toString());

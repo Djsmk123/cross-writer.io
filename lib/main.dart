@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:blogtools/core/themes/theme.dart';
+import 'package:blogtools/repo/blog_repo.dart';
 import 'package:blogtools/repo/models/api_keys.dart';
 import 'package:blogtools/routing/routing_dat.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   Hive.registerAdapter(BlogApiBoxAdapter());
+  await BlogRepo.createEncryptionKey();
+  print("key" + BlogRepo.encryptionKey);
   runApp(const MyApp());
 }
 

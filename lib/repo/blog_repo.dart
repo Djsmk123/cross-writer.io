@@ -1,17 +1,22 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:blogtools/core/enum.dart';
 import 'package:blogtools/core/errors/exceptions.dart';
 import 'package:blogtools/core/services/network/network_info.dart';
 import 'package:blogtools/repo/models/api_keys.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 
 import '../core/errors/failures.dart';
 
 class BlogRepo {
+  static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   static Future<(Failure?, BlogApiBox?)> fetchAPIKeys() async {
     try {
-      final box = await Hive.openBox<BlogApiBox>('api_keys');
+      final box = await Hive.openBox<BlogApiBox>('api_keys',
+          encryptionCipher: HiveAesCipher(base64Url.decode(encryptionKey)));
       if (box.isNotEmpty) {
         return (null, box.getAt(0));
       }
@@ -24,7 +29,10 @@ class BlogRepo {
 
   static Future<Failure?> addAPIKey(BlogApiBox api) async {
     try {
-      final box = await Hive.openBox<BlogApiBox>('api_keys');
+      /*     var encryptionKey = base64Url.decode(
+          await secureStorage.read(key: 'encryptionKey') ?? "encryptionKey");*/
+      final box = await Hive.openBox<BlogApiBox>('api_keys',
+          encryptionCipher: HiveAesCipher(base64Url.decode(encryptionKey)));
       await box.add(api);
     } catch (e) {
       log(e.toString());
@@ -35,7 +43,8 @@ class BlogRepo {
 
   static Future<Failure?> updateApiKey(BlogApiBox api) async {
     try {
-      final box = await Hive.openBox<BlogApiBox>('api_keys');
+      final box = await Hive.openBox<BlogApiBox>('api_keys',
+          encryptionCipher: HiveAesCipher(base64Url.decode(encryptionKey)));
       await box.putAt(0, api);
     } catch (e) {
       log(e.toString());
@@ -119,5 +128,23 @@ class BlogRepo {
       "dev_api": devApi,
     });
     return res.$1;
+  }
+
+  static String encryptionKey = "";
+  static Future<Failure?> createEncryptionKey() async {
+    try {
+      var secretKey = await secureStorage.read(key: 'key');
+      if (secretKey == null) {
+        final key = Hive.generateSecureKey();
+        encryptionKey = base64Url.encode(key);
+        await secureStorage.write(key: 'key', value: encryptionKey);
+        debugPrint(base64Encode(key));
+        return null;
+      }
+      encryptionKey = secretKey;
+    } catch (e) {
+      return CustomErrorFailure(message: "failed to generate secure key");
+    }
+    return null;
   }
 }

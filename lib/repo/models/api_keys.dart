@@ -26,4 +26,13 @@ class BlogApiBox extends HiveObject {
         devToApiKey ?? this.devToApiKey,
         hashUserId ?? this.hashUserId);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'medium_api_key': mediumApiKey,
+      'dev_to_api_key': devToApiKey,
+      'hash_user_id': hashUserId,
+      'hash_api_key': hashApiKey,
+    };
+  }
 }

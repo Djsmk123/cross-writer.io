@@ -6,6 +6,6 @@ extension MediaSize on BuildContext {
   }
 
   bool isWeb() {
-    return get().width > 600;
+    return get().width > 420;
   }
 }

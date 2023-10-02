@@ -88,7 +88,10 @@ class HomeScreenBackgroundWidget extends StatelessWidget {
                       )
                     ],
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
               ],
             )),
         children: [child],

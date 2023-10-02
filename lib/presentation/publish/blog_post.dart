@@ -42,7 +42,7 @@ class _BlogPostState extends State<BlogPost> with Validation {
   bool medium = true;
   bool hash = true;
   bool devTo = true;
-  bool storeApiKey = true;
+  bool storeApiKey = false;
   BlogSource source = BlogSource.medium;
 
   @override
@@ -91,6 +91,7 @@ class _BlogPostState extends State<BlogPost> with Validation {
   @override
   Widget build(BuildContext context) {
     bool isWeb = context.isWeb();
+
     return WillPopScope(
       onWillPop: () async {
         context.router.replaceNamed('/');
@@ -209,29 +210,31 @@ class _BlogPostState extends State<BlogPost> with Validation {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 RoundedButton(
-                                  width: context.isWeb() ? 60 : 80.w,
-                                  height: 50.h,
+                                  width: isWeb ? 60 : 120.w,
+                                  height: 40.h,
                                   onTap: () {
                                     context.router.replaceNamed('/');
                                   },
                                   backgroundColor: Colors.red,
-                                  child: const Text(
+                                  child: Text(
                                     "Cancel",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                        color: Colors.white,
+                                        fontSize: isWeb ? 16 : 14),
                                   ),
                                 ),
                                 RoundedButton(
-                                  width: context.isWeb() ? 60 : 80.w,
-                                  height: 50.h,
+                                  width: isWeb ? 60 : 120.w,
+                                  height: 40.h,
                                   onTap: () {
                                     onSubmit();
                                   },
                                   backgroundColor: Colors.green,
-                                  child: const Text(
+                                  child: Text(
                                     "Publish",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                        color: Colors.white,
+                                        fontSize: isWeb ? 16 : 14),
                                   ),
                                 ),
                               ],
@@ -375,6 +378,9 @@ class _BlogPostState extends State<BlogPost> with Validation {
 
   updateApiKey() async {
     bool isNew = apiBox == null;
+    if (isNew) {
+      apiBox = BlogApiBox(null, null, null, null);
+    }
     setState(() {
       isLoading = true;
     });

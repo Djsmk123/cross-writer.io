@@ -74,6 +74,7 @@ class _ApiKeysState extends State<ApiKeys> {
   @override
   Widget build(BuildContext context) {
     bool isWeb = context.isWeb();
+
     return HomeScreenBackgroundWidget(
         child: !isLoading
             ? Form(
@@ -128,7 +129,7 @@ class _ApiKeysState extends State<ApiKeys> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             RoundedButton(
-                              width: isWeb ? 30 : 100,
+                              width: isWeb ? 60 : 120.w,
                               height: 50,
                               onTap: onSubmit,
                               backgroundColor: Colors.blueAccent,
@@ -160,16 +161,17 @@ class _ApiKeysState extends State<ApiKeys> {
 
   updateApiKey() async {
     bool isNew = apiBox == null;
+    if (isNew) {
+      apiBox = BlogApiBox(null, null, null, null);
+    }
     setState(() {
       isLoading = true;
     });
     if (devTo && devToApiKey.text.isNotEmpty) {
       apiBox = apiBox?.copyWith(devToApiKey: devToApiKey.text);
-      //devToApiKey.clear();
     }
     if (medium && mediumApiKey.text.isNotEmpty) {
       apiBox = apiBox?.copyWith(mediumApiKey: mediumApiKey.text);
-      // mediumApiKey.clear();
     }
     if (hash) {
       if (hashNodeUserApiKey.text.isNotEmpty) {
@@ -179,6 +181,7 @@ class _ApiKeysState extends State<ApiKeys> {
         apiBox = apiBox?.copyWith(hashApiKey: hashNodeApiKey.text);
       }
     }
+
     final res = isNew
         ? await BlogRepo.addAPIKey(apiBox!)
         : (await BlogRepo.updateApiKey(apiBox!));
