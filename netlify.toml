@@ -1,7 +1,7 @@
 # example netlify.toml
 [build]
-  command = "# no build command"
-  functions = "netlify/functions"
+  command = "if [ -d "flutter" ]; then cd flutter && git pull && cd ..; else git clone https://github.com/flutter/flutter.git; fi; flutter/bin/flutter build web"
+  #functions = "netlify/functions"
   publish = "build/web"
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
